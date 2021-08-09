@@ -14,7 +14,7 @@ db.execute('SELECT * FROM products')
 
 app.use(cors());
 
-app.get('/products', async (req, res) => {
+app.get('/products', async (req, res, next) => {
     let [rows, fieldData] = await Product.fetchAll();
     let products = [];
     for(let i = 0; i < rows.length; i++) {
@@ -23,11 +23,25 @@ app.get('/products', async (req, res) => {
     res.send(products);
 });
 
-app.get('/products/:productId', async (req, res) => {
+app.get('/products/:productId', async (req, res, next) => {
     const prodId = req.params.productId;
-    let resultProduct = await Product.findById(req.params.productId)
-    console.log(resultProduct);
+    console.log(prodId)
+    let resultProduct = await Product.findById(prodId)
     res.send(resultProduct)
+});
+
+app.post('/admin/add-product', async (req, res, next) => {
+    const title = req.body.title;
+    const imageUrl = req.body.imageUrl;
+    const price = req.body.price;
+    const description = req.body.description;
+    const product = new Product(null, title, imageUrl, description, price);
+    product
+    .save()
+    .then(() => {
+      res.redirect('/');
+    })
+    .catch(err => console.log(err));
 });
 
 app.get('/', (req, res) => {
