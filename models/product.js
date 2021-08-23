@@ -1,7 +1,5 @@
 const db = require('../utils/database');
 
-//const Cart = require('./cart');
-
 module.exports = class Product {
     constructor(id, title, imageUrl, description, price) {
         this.id = id;
@@ -14,8 +12,7 @@ module.exports = class Product {
     save() {
         return db.execute(
             'INSERT INTO products (title, price, imageUrl, description) VALUES (?, ?, ?, ?)',
-            [this.title]
-            //[this.title, this.price, this.imageUrl, this.description]
+            [this.title, this.price, this.imageUrl, this.description]
         );
     }
 
